@@ -87,12 +87,12 @@ add_library(npengine SHARED
 )
 
 # Shared Library
-add_library(npengine_shared SHARED ${LIBNPENGINE_SOURCES})
+add_library(npengine_shared SHARED ${npengine})
 set_target_properties(npengine_shared PROPERTIES OUTPUT_NAME "npengine")
 set_target_properties(npengine_shared PROPERTIES OUTPUT_NAME "npengine")
 
 # Static Library
-add_library(npengine_static STATIC ${LIBNPENGINE_SOURCES})
+add_library(npengine_static STATIC ${npengine})
 set_target_properties(npengine_static PROPERTIES OUTPUT_NAME "npengine")
 set_target_properties(npengine_static PROPERTIES OUTPUT_NAME "npengine")
 
