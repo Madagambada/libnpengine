@@ -31,7 +31,24 @@ jobs:
           bison
           doas
 
-    - name: build
+    - name: build libnpa
+      run: |
+        git clone https://github.com/Madagambada/libnpa.git -b libnpa-0.5.3
+        cd libnpa
+        echo "::group::Configure"
+        mkdir build
+        cd build
+        export CXX=clang++
+        export CC=clang
+        cmake -DCMAKE_BUILD_TYPE=Release ..
+        echo "::endgroup::"
+        echo "::group::Build"
+        make -j4
+        echo "::endgroup::"
+        doas make install
+      shell: alpine.sh {0}
+
+    - name: build libnpengine
       run: |
         echo "::group::Configure"
         mkdir build

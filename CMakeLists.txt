@@ -1,5 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
-include(FetchContent)
+cmake_minimum_required(VERSION 3.0)
 
 # add modules
 set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
@@ -21,18 +20,6 @@ endif()
 
 message(STATUS "Configuring libnpengine version " ${LIBNPENGINE_VERSION})
 
-# Libnpa
-include(FetchContent)
-FetchContent_Declare(
-  libnpa
-  GIT_REPOSITORY https://github.com/Madagambada/libnpa.git
-  GIT_TAG libnpa-0.5.3
-)
-FetchContent_MakeAvailable(libnpa)
-set(NPA_INCLUDE_DIR "${libnpa_SOURCE_DIR}/include")
-set(NPA_DIR "${libnpa_SOURCE_DIR}")
-set(NPA_LIBRARY npa)
-
 # project name and language
 project (libnpengine CXX)
 
@@ -43,7 +30,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O2 -Wall")
 configure_file(${PROJECT_SOURCE_DIR}/include/npengineversion.hpp.in
     ${PROJECT_SOURCE_DIR}/include/npengineversion.hpp)
 
-find_package(NPA REQUIRED CONFIG)
+find_package(NPA REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(JPEG REQUIRED)
 find_package(GStreamer REQUIRED)
@@ -102,7 +89,7 @@ add_library(npengine SHARED
 target_link_libraries(npengine
 	${CMAKE_THREAD_LIBS_INIT}
 	${SDL2_LIBRARIES}
-	PRIVATE NPA::npa
+	${NPA_LIBRARY}
 	${GSTREAMER_LIBRARIES}
 	${GSTREAMER_APP_LIBRARIES}
 	${GSTREAMER_VIDEO_LIBRARIES}
