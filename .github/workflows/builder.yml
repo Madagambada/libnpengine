@@ -31,6 +31,9 @@ jobs:
           bison
           doas
           glew-dev
+          jpeg-dev
+          gstreamer-dev
+          libpng-dev
 
     - name: build libnpa
       run: |
