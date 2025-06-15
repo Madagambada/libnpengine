@@ -30,6 +30,7 @@ jobs:
           git
           bison
           doas
+          glew-dev
 
     - name: build libnpa
       run: |
