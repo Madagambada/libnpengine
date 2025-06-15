@@ -69,5 +69,6 @@ jobs:
         echo "::group::Build"
         make -j4
         echo "::endgroup::"
+        doas make install
         cpack
       shell: alpine.sh {0}
