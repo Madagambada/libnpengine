@@ -30,6 +30,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(libnpa)
 set(NPA_INCLUDE_DIR "${libnpa_SOURCE_DIR}/include")
+set(NPA_DIR "${libnpa_SOURCE_DIR}")
 set(NPA_LIBRARY npa)
 
 # project name and language
