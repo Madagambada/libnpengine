@@ -22,10 +22,14 @@ jobs:
       with:
         branch: edge
         packages: >
+          boost-dev
           make
           cmake
           clang
+          flex-dev
           git
+          bison
+          doas
 
     - name: build
       run: |
