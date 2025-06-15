@@ -86,24 +86,40 @@ add_library(npengine SHARED
     src/Scrollbar.cpp
 )
 
-target_link_libraries(npengine
-	${CMAKE_THREAD_LIBS_INIT}
-	${SDL2_LIBRARIES}
-	${NPA_LIBRARY}
-	${GSTREAMER_LIBRARIES}
-	${GSTREAMER_APP_LIBRARIES}
-	${GSTREAMER_VIDEO_LIBRARIES}
-	${PANGOCAIRO_LIBRARIES} 
-	${JPEG_LIBRARY} 
-	${GLEW_LIBRARY} 
-	${PNG_LIBRARIES}
-	-lGL)
+# Shared Library
+add_library(npengine_shared SHARED ${LIBNPENGINE_SOURCES})
+set_target_properties(npengine_shared PROPERTIES OUTPUT_NAME "npengine")
+set_target_properties(npengine_shared PROPERTIES OUTPUT_NAME "npengine")
+
+# Static Library
+add_library(npengine_static STATIC ${LIBNPENGINE_SOURCES})
+set_target_properties(npengine_static PROPERTIES OUTPUT_NAME "npengine")
+set_target_properties(npengine_static PROPERTIES OUTPUT_NAME "npengine")
+
+# Beide Bibliotheken verlinken
+foreach(LIB_TARGET npengine_shared npengine_static)
+    target_link_libraries(${LIB_TARGET}
+        ${CMAKE_THREAD_LIBS_INIT}
+        ${SDL2_LIBRARIES}
+        ${NPA_LIBRARY}
+        ${GSTREAMER_LIBRARIES}
+        ${GSTREAMER_APP_LIBRARIES}
+        ${GSTREAMER_VIDEO_LIBRARIES}
+        ${PANGOCAIRO_LIBRARIES}
+        ${JPEG_LIBRARY}
+        ${GLEW_LIBRARY}
+        ${PNG_LIBRARIES}
+        -lGL
+    )
+endforeach()
 
 # install headers and library
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/
     DESTINATION include/libnpengine
     FILES_MATCHING PATTERN "*.hpp")
-install(TARGETS npengine DESTINATION lib)
+install(TARGETS npengine_shared npengine_static
+    ARCHIVE DESTINATION lib   # Static
+    LIBRARY DESTINATION lib   # Shared
 
 # create packages
 set(CPACK_GENERATOR "TBZ2")
