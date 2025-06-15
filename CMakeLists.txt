@@ -120,6 +120,7 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/
 install(TARGETS npengine_shared npengine_static
     ARCHIVE DESTINATION lib   # Static
     LIBRARY DESTINATION lib   # Shared
+)
 
 # create packages
 set(CPACK_GENERATOR "TBZ2")
