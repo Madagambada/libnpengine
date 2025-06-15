@@ -67,7 +67,7 @@ link_directories(
 flex_target(lexer ${CMAKE_SOURCE_DIR}/src/lexer.l ${CMAKE_SOURCE_DIR}/src/Lexer.cpp)
 bison_target(parser ${CMAKE_SOURCE_DIR}/src/parser.y ${CMAKE_SOURCE_DIR}/src/Parser.cpp)
 
-add_library(npengine SHARED
+set(LIBNPENGINE_SOURCES
     src/Window.cpp
     src/NSBInterpreter.cpp
     src/ResourceMgr.cpp
@@ -79,20 +79,20 @@ add_library(npengine SHARED
     src/Movie.cpp
     src/Choice.cpp
     src/Text.cpp
-    src/Parser.cpp
-    src/Lexer.cpp
+    ${BISON_parser_OUTPUTS}
+    ${FLEX_lexer_OUTPUTS}
     src/Image.cpp
     src/NSBDebugger.cpp
     src/Scrollbar.cpp
 )
 
 # Shared Library
-add_library(npengine_shared SHARED ${npengine})
+add_library(npengine_shared SHARED ${LIBNPENGINE_SOURCES})
 set_target_properties(npengine_shared PROPERTIES OUTPUT_NAME "npengine")
 set_target_properties(npengine_shared PROPERTIES OUTPUT_NAME "npengine")
 
 # Static Library
-add_library(npengine_static STATIC ${npengine})
+add_library(npengine_static STATIC ${LIBNPENGINE_SOURCES})
 set_target_properties(npengine_static PROPERTIES OUTPUT_NAME "npengine")
 set_target_properties(npengine_static PROPERTIES OUTPUT_NAME "npengine")
 
