@@ -29,6 +29,8 @@ FetchContent_Declare(
   GIT_TAG libnpa-0.5.3
 )
 FetchContent_MakeAvailable(libnpa)
+set(NPA_INCLUDE_DIR "${libnpa_SOURCE_DIR}/include")
+set(NPA_LIBRARY npa)
 
 # project name and language
 project (libnpengine CXX)
