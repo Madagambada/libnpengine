@@ -33,6 +33,7 @@ jobs:
           glew-dev
           jpeg-dev
           gstreamer-dev
+          gst-plugins-base-dev
           libpng-dev
           sdl2-dev
           pango-dev
