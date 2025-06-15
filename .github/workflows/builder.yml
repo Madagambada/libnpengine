@@ -28,6 +28,7 @@ jobs:
           clang
           flex-dev
           git
+          icu-data-full
           bison
           doas
           glew-dev
