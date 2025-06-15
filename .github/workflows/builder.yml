@@ -33,7 +33,7 @@ jobs:
 
     - name: build libnpa
       run: |
-        git clone https://github.com/Madagambada/libnpa.git -b libnpa-0.5.3
+        git clone https://github.com/Madagambada/libnpa.git
         cd libnpa
         echo "::group::Configure"
         mkdir build
