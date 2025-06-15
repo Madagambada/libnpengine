@@ -32,6 +32,7 @@ configure_file(${PROJECT_SOURCE_DIR}/include/npengineversion.hpp.in
 
 find_package(NPA REQUIRED)
 find_package(GLEW REQUIRED)
+find_package(OpenGL REQUIRED)
 find_package(JPEG REQUIRED)
 find_package(GStreamer REQUIRED)
 find_package(FLEX REQUIRED)
@@ -99,6 +100,7 @@ set_target_properties(npengine_static PROPERTIES OUTPUT_NAME "npengine")
 # Beide Bibliotheken verlinken
 foreach(LIB_TARGET npengine_shared npengine_static)
     target_link_libraries(${LIB_TARGET}
+        PRIVATE
         ${CMAKE_THREAD_LIBS_INIT}
         ${SDL2_LIBRARIES}
         ${NPA_LIBRARY}
@@ -107,9 +109,9 @@ foreach(LIB_TARGET npengine_shared npengine_static)
         ${GSTREAMER_VIDEO_LIBRARIES}
         ${PANGOCAIRO_LIBRARIES}
         ${JPEG_LIBRARY}
-        ${GLEW_LIBRARY}
+        ${GLEW_LIBRARIES}
+        OpenGL::GL
         ${PNG_LIBRARIES}
-        -lGL
     )
 endforeach()
 
