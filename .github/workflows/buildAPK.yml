@@ -34,6 +34,7 @@ jobs:
           pango-dev
           cairo-dev
           bash
+          alpine-sdk
 
     - name: install apk
       run: |
