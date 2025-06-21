@@ -35,6 +35,7 @@ jobs:
           cairo-dev
           bash
           alpine-sdk
+          doas
 
     - name: install apk
       run: |
