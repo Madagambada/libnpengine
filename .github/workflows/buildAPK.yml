@@ -3,8 +3,8 @@ run-name: Build apk ${{ github.ref_name }}
 
 on:
   push:
-    branches:
-      - '*'
+    tags:
+        - "libnpengine-*.*.*"
 
   
 permissions:
