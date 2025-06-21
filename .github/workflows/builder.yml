@@ -40,22 +40,12 @@ jobs:
           pango-dev
           cairo-dev
 
-    - name: build libnpa
+    - name: install libnpa apk
       run: |
-        git clone https://github.com/Madagambada/libnpa.git
-        cd libnpa
-        echo "::group::Configure"
-        mkdir build
-        cd build
-        export CXX=clang++
-        export CC=clang
-        cmake -DCMAKE_BUILD_TYPE=Release ..
-        echo "::endgroup::"
-        echo "::group::Build"
-        make -j4
-        echo "::endgroup::"
-        doas make install
-      shell: alpine.sh {0}
+        wget https://github.com/Madagambada/libnpa/releases/download/libnpa-0.5.3/libnpa-0.5.3-r0.apk
+        wget https://github.com/Madagambada/libnpa/releases/download/libnpa-0.5.3/libnpa-dev-0.5.3-r0.apk
+        apk add --allow-untrusted libnpa-0.5.3-r0.apk libnpa-dev-0.5.3-r0.apk
+      shell: alpine.sh --root {0}
 
     - name: build libnpengine
       run: |
