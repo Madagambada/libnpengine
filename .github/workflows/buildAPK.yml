@@ -1,0 +1,109 @@
+name: libnpengine apk builder
+run-name: Build apk ${{ github.ref_name }}
+
+on:
+  push:
+    branches:
+      - '*'
+
+  
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: jirutka/setup-alpine@v1
+      with:
+        branch: latest-stable
+        packages: >
+          make
+          cmake
+          clang
+          git
+          glew-dev
+          jpeg-dev
+          gstreamer-dev
+          gst-plugins-base-dev
+          libpng-dev
+          sdl2-dev
+          pango-dev
+          cairo-dev
+
+    - name: install apk
+      run: |
+        wget https://github.com/Madagambada/libnpa/releases/download/libnpa-0.5.3/libnpa-0.5.3.apk
+        wget https://github.com/Madagambada/libnpa/releases/download/libnpa-0.5.3/libnpa-dev-0.5.3.apk
+        apk add --allow-untrusted libnpa-0.5.3.apk libnpa-dev-0.5.3.apk
+
+    - name: build apk
+      run: |
+        adduser -D abuilder
+        adduser abuilder abuild
+        adduser abuilder wheel
+        mkdir libnpengine
+        cd libnpengine
+        cat > APKBUILD << 'EOF'
+        # Maintainer:
+        pkgname=libnpengine
+        pkgver=0.5.3
+        pkgrel=0
+        pkgdesc="library for Free implementation of Nitroplus/5pb. Visual Novel game engine"
+        url="https://github.com/Madagambada/libnpengine"
+        arch="all"
+        license="MIT"
+        options="!check"
+        depends="boost-libs zlib"
+        makedepends="cmake samurai boost-dev zlib-dev flex bison"
+        subpackages="$pkgname-dev"
+        source="https://github.com/Madagambada/libnpengine/archive/refs/tags/libnpengine-$pkgver.tar.gz"
+        builddir="$srcdir/libnpengine-libnpengine-$pkgver"
+
+        build() {
+            cd "$builddir"
+            
+            local crossopts=""
+            [ "$CBUILD" != "$CHOST" ] && crossopts="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
+
+            cmake -B build -G Ninja \
+                -DCMAKE_INSTALL_PREFIX=/usr \
+                -DCMAKE_INSTALL_LIBDIR=lib \
+                -DCMAKE_BUILD_TYPE=Release \
+                -DBoost_USE_STATIC_LIBS=OFF \
+                $crossopts .
+            
+            cmake --build build
+        }
+
+        package() {
+            cd "$builddir/build"
+            DESTDIR="$pkgdir" cmake --install .
+        }
+        EOF
+        mkdir -p /var/cache/distfiles
+        chown root:abuild /var/cache/distfiles
+        chmod 775 /var/cache/distfiles
+        chown root:abuild /home/runner/work/libnpengine/libnpengine/libnpengine
+        chmod 775 /home/runner/work/libnpengine/libnpengine/libnpengine
+        echo "permit nopass :wheel" > /etc/doas.conf
+        chown root:root /etc/doas.conf
+        export PATH="/sbin:/usr/sbin:/bin:/usr/bin:$PATH"
+        su - abuilder -c "export CBUILD=\"$(uname -m)-alpine-linux-musl\" && export CARCH=\"$(uname -m)\" && abuild-keygen -n -a -i"
+        su - abuilder -c "export PATH='$PATH' && cd /home/runner/work/libnpengine/libnpengine/libnpengine && export CBUILD=\"$(uname -m)-alpine-linux-musl\" && export CARCH=\"$(uname -m)\" && abuild checksum"
+        su - abuilder -c "export PATH='$PATH' && cd /home/runner/work/libnpengine/libnpengine/libnpengine && export CBUILD=\"$(uname -m)-alpine-linux-musl\" && export CARCH=\"$(uname -m)\" && abuild -r"
+      shell: alpine.sh --root {0}
+
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      with:
+        name: ${{ github.ref_name }}
+        generate_release_notes: true
+        tag_name: ${{ github.ref }}
+        files: |
+          /home/runner/rootfs/alpine-latest-x86_64/home/abuilder/packages/libnpengine/x86_64/*.apk
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
