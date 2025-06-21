@@ -33,6 +33,7 @@ jobs:
           sdl2-dev
           pango-dev
           cairo-dev
+          bash
 
     - name: install apk
       run: |
