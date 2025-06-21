@@ -36,8 +36,8 @@ jobs:
 
     - name: install apk
       run: |
-        wget https://github.com/Madagambada/libnpa/releases/download/libnpa-0.5.3/libnpa-0.5.3.apk
-        wget https://github.com/Madagambada/libnpa/releases/download/libnpa-0.5.3/libnpa-dev-0.5.3.apk
+        wget https://github.com/Madagambada/libnpa/releases/download/libnpa-0.5.3/libnpa-0.5.3-r0.apk
+        wget https://github.com/Madagambada/libnpa/releases/download/libnpa-0.5.3/libnpa-dev-0.5.3-r0.apk
         apk add --allow-untrusted libnpa-0.5.3.apk libnpa-dev-0.5.3.apk
 
     - name: build apk
